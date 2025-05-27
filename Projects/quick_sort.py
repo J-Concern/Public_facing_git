@@ -17,6 +17,7 @@ def is_sorted(array, ascending = True):
     return True
 
 def number_sort_algo(array, ascending = True):
+    # this is not quick sort unfortunately.
     # this does the work of sorting in best case O n log(n) time. 
     if len(array) <= 2:
         #removes edge cases of array being to small, if True returns array.
@@ -59,20 +60,31 @@ def number_sort_algo(array, ascending = True):
 
     if is_sorted(array) == True:
         #checks if array is sorted, if True returns array.
-        print("Returned sorted Array.")
         return array, step_counter
     
     else:
         #error control, if something fails this should be able to pass False
         print("Error")
         return False
-                
 
 def sort_algo_test(array_size):
     #a small test function
-    array = [random.randint(1,1000) for i in range(array_size)]
-    array, step_counter = number_sort_algo(array)
-    print(array)
-    print(step_counter)
+    custom_algo = []
+    quick_sort_algo = []
+    for i in range(number_of_tests):
+        array = [random.randint(1,1000) for i in range(array_size)]
+        array2 = array.copy()
+        array2, step_counter = number_sort_algo(array)
+        custom_algo.append(step_counter)
+        #print(f"Total Number of Steps: {step_counter}.")
+        #print(array2)
+        array, stepcounter = quick_sort(array,True, True)
+        #print(f"Total Number of Steps: {stepcounter}.")
+        quick_sort_algo.append(stepcounter)
+        #print(array)
+    print(f"Average steps for Custom Algo:{sum(custom_algo)/len(custom_algo)}.")
+    print(f"Best case for Custom Algo: {min(custom_algo)}.")
+    print(f"Average steps for Quick Sort:{sum(quick_sort_algo)/len(quick_sort_algo)}.")
+    print(f"Best case for Quick Sort: {min(quick_sort_algo)}.")
 
-sort_algo_test(400)
+sort_algo_test(10,5000)
