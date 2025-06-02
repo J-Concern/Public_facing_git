@@ -17,9 +17,8 @@ def is_sorted(array, ascending = True):
     return True
 
 def number_sort_algo(array, ascending = True):
-    # this is not quick sort unfortunately.
-    # this does the work of sorting in best case O n log(n) time. 
-    if len(array) <= 2:
+    # this does the work of sorting in best case On, worst case O (n!)
+    if len(array) <= 1:
         #removes edge cases of array being to small, if True returns array.
         print("Array too Short.")
         return array
@@ -67,24 +66,111 @@ def number_sort_algo(array, ascending = True):
         print("Error")
         return False
 
-def sort_algo_test(array_size):
+
+def quick_sort(array, ascending = True, first_step = True, stepcounter = 0):
+    # best case o(nlogn) worst case o(n^2)
+    if first_step == True:
+        # sets the step counter, to help with tracking
+        first_step = False
+
+    if len(array) <= 1:
+        #removes edge cases of array being to small, if True returns array.
+        return array, stepcounter
+
+    stepcounter = stepcounter + 1
+
+    #determines a random pivot and gets the index.
+    pivot_index = math.floor(random.randint(0, (len(array)-1)))
+    pivot = array[pivot_index]
+
+    
+    #creates arrays to store the wings of data.
+    less_than = []
+    greater_than = []
+
+    for i in array[:pivot_index] + array[pivot_index + 1:]:
+
+        if ascending == True:
+            if i <= pivot:
+                less_than.append(i)
+            else:
+                greater_than.append(i)
+
+        if ascending == False:
+            if i >= pivot:
+                less_than.append(i)
+            else:
+                greater_than.append(i)
+
+    #recursively sorts left and right in infinte fashion.
+    sorted_left, stepcounter = quick_sort(less_than, ascending, False, stepcounter)
+    sorted_right, stepcounter = quick_sort(greater_than, ascending, False, stepcounter)
+
+    return sorted_left + [pivot] + sorted_right, stepcounter
+
+def merge_sort(array, first_step = True, stepcounter = 0):
+    if first_step == True:
+        # sets the step counter, to help with tracking
+        first_step = False
+
+    if len(array) <= 1:
+        #removes edge cases of array being to small, if True returns array.
+        return array, stepcounter
+
+    stepcounter = stepcounter + 1
+    midpoint = len(array)//2
+    #split into individual units
+    left = array[:midpoint]
+    right = array[midpoint:]
+    #recursive calls
+    sorted_left, stepcounter = merge_sort(left, False, stepcounter)
+    sorted_right, stepcounter= merge_sort(right, False, stepcounter)
+    #returns with merge helper function
+    return merge(sorted_left, sorted_right), stepcounter
+
+def merge(left,right):
+    #merge helper function
+    result = []
+    position_left = position_right = 0
+    #opens while loop to interate through positions
+    while position_left < len(left) and position_right < len(right):
+        #left side
+        if left[position_left] < right[position_right]:
+            result.append(left[position_left])
+            position_left +=1
+        #right side
+        else:
+            result.append(right[position_right])
+            position_right +=1
+        #could program a block for reversal of ascending vs decending here
+        #would probably end up with a deeper level of abstraction
+    result.extend(left[position_left:])
+    result.extend(right[position_right:])
+
+    return result
+
+
+def sort_algo_test(array_size, number_of_tests):
     #a small test function
     custom_algo = []
     quick_sort_algo = []
+    merge_sort_algo = []
     for i in range(number_of_tests):
         array = [random.randint(1,1000) for i in range(array_size)]
         array2 = array.copy()
+        array3 = array.copy()
         array2, step_counter = number_sort_algo(array)
         custom_algo.append(step_counter)
-        #print(f"Total Number of Steps: {step_counter}.")
-        #print(array2)
-        array, stepcounter = quick_sort(array,True, True)
-        #print(f"Total Number of Steps: {stepcounter}.")
+        array, stepcounter = quick_sort(array,True)
         quick_sort_algo.append(stepcounter)
-        #print(array)
+        array3, stepcounter = merge_sort(array,True)
+        merge_sort_algo.append(stepcounter)
     print(f"Average steps for Custom Algo:{sum(custom_algo)/len(custom_algo)}.")
-    print(f"Best case for Custom Algo: {min(custom_algo)}.")
+    print(f"Best case for Custom Algo: {min(custom_algo)}.\n")
     print(f"Average steps for Quick Sort:{sum(quick_sort_algo)/len(quick_sort_algo)}.")
-    print(f"Best case for Quick Sort: {min(quick_sort_algo)}.")
+    print(f"Best case for Quick Sort: {min(quick_sort_algo)}.\n")
+    print(f"Average steps for Merge Sort:{sum(merge_sort_algo)/len(merge_sort_algo)}.")
+    print(f"Best case for Merge Sort: {min(merge_sort_algo)}.")
 
-sort_algo_test(10,5000)
+
+sort_algo_test(1000,5)
