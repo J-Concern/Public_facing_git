@@ -1,6 +1,8 @@
 import random
 import math
 
+
+#SORT CHECKER
 def is_sorted(array, ascending = True):
     #helper function, can measure if an array is sorted in O(n) worst case.
     for i in range(0,int(len(array)-1)):
@@ -16,6 +18,9 @@ def is_sorted(array, ascending = True):
     #if iterates through with no False returns then returns true. 
     return True
 
+
+
+#CUSTOM SORT
 def number_sort_algo(array, ascending = True):
     # this does the work of sorting in best case On, worst case O (n!)
     if len(array) <= 1:
@@ -67,6 +72,8 @@ def number_sort_algo(array, ascending = True):
         return False
 
 
+
+#QUICKSORT
 def quick_sort(array, ascending = True, first_step = True, stepcounter = 0):
     # best case o(nlogn) worst case o(n^2)
     if first_step == True:
@@ -108,6 +115,9 @@ def quick_sort(array, ascending = True, first_step = True, stepcounter = 0):
 
     return sorted_left + [pivot] + sorted_right, stepcounter
 
+
+
+#MERGE SORT
 def merge_sort(array, first_step = True, stepcounter = 0):
     if first_step == True:
         # sets the step counter, to help with tracking
@@ -149,7 +159,13 @@ def merge(left,right):
 
     return result
 
+# random single dimensional array generator.
+def random_1d_array_gen(max_int, array_size):
+    array = [random.randint(1, max_int, ) for i in range(array_size)]
+    return array
 
+
+#Sort Comparator
 def sort_algo_test(array_size, number_of_tests):
     #a small test function
     custom_algo = []
@@ -172,5 +188,5 @@ def sort_algo_test(array_size, number_of_tests):
     print(f"Average steps for Merge Sort:{sum(merge_sort_algo)/len(merge_sort_algo)}.")
     print(f"Best case for Merge Sort: {min(merge_sort_algo)}.")
 
-
-sort_algo_test(1000,5)
+if __name__ == "__main__":
+    sort_algo_test(1000,5)
